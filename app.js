@@ -39,7 +39,7 @@ var session;
 app.get('/',(req,res) => {
   session=req.session;
   if(session.userid){
-      res.render("home");
+      res.render("home", {myusername});
   }else{
     const message = "";
     res.render('index', {message})
@@ -63,7 +63,7 @@ app.post('/',(req,res) => {
       session = req.session;
       session.userid = req.body.username;
       console.log(req.session);
-      res.render('home');
+      res.render('home', {myusername});
   }
 })
 app.get('/logout',(req,res) => {
