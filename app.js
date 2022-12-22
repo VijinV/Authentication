@@ -2,11 +2,14 @@ const express = require('express');
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
 const app = express();
+const bcrypt = require('bcrypt');//for hashing passwords
 const PORT = 4000;
 // creating 24 hours from milliseconds
 const oneDay = 1000 * 60 * 60 * 24;
 
-app.set('view engine', 'ejs');
+
+// app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs');
 
 //session middleware
 app.use(sessions({
@@ -31,8 +34,11 @@ app.use(function(req, res, next) {
   next();
 });
 //username and password
-const myusername = 'Aravind'
-const mypassword = '1234'
+// const myusername = 'Vijin'
+// const mypassword = '1234'
+
+let myusername
+let mypassword 
 
 // a variable to save a session
 var session;
@@ -45,6 +51,29 @@ app.get('/',(req,res) => {
     res.render('index', {message})
   }
 });
+
+app.post('/register', (req,res)=>{
+
+  try {
+    // const hashpassword = await bcrypt.hash(req.body.password,10)
+    
+    myusername = req.body.username
+    mypassword = req.body.password
+
+    res.render('index')
+      
+  } catch (e) {
+
+   res.redirect('/register')
+    
+  }
+  console.log(myusername, mypassword);
+    
+})
+
+app.get('/register', (req, res) => {
+  res.render('register') 
+})
 app.post('/',(req,res) => {
   // if(req.body.username == myusername && req.body.password == mypassword){
   //     session=req.session;
@@ -52,6 +81,9 @@ app.post('/',(req,res) => {
   //     console.log(req.session)
   //     res.send(`Hey there, welcome <a href=\'/logout'>click to logout</a>`);
   // }
+    // const password = await bcrypt.hash(req.body.password)
+    // console.log(password);
+
   if(req.body.username != myusername){
     const message = "Enter valid email"
     res.render('index', {message})
